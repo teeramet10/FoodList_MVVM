@@ -7,8 +7,12 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class FoodListViewController: UIViewController {
 
+    var presenter: FoodListPresenterProtocol?
+    var interactor: FoodListInteractorProtocol?
+
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
