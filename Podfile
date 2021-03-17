@@ -15,8 +15,4 @@ target 'FoodList' do
     # Pods for testing
   end
 
-  target 'FoodListUITests' do
-    # Pods for testing
-  end
-
 end
