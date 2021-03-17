@@ -6,31 +6,47 @@
 //
 
 import Foundation
-class FoodListViewModel {
+import RxSwift
+
+class FoodListViewModel : FoodListViewModelOutputProtocol , FoodListViewModelType{
+  
+    var inputs: FoodListViewModelInputProtocol {return self}
+    var outputs: FoodListViewModelOutputProtocol {return self}
     
-    var list : [FoodListModel]? = []
+    var didError: ((String) -> Void)?
+    var didUpdateData: (() -> Void)?
     
     var repository : FoodRepositoryProtocol
+    private let disposeBag  = DisposeBag()
     
-    var onFetchDataSuccess : (()->Void)?
-    
+    var list: [FoodListModel] = []
+        
     init(repository : FoodRepositoryProtocol){
         self.repository = repository
     }
 }
 
-extension FoodListViewModel : FoodListViewModelProtocol{
+extension FoodListViewModel : FoodListViewModelInputProtocol{
+   
     func requestData() {
-        let list = repository.getFoodList()
-        
-        self.list = list.enumerated().map{(index , data) in
-            if index % 5 == 1{
-                return .imageInsertion
-            }else{
-                return .data(food: data)
+        repository.getFoodList().bind().subscribe(onNext: { [weak self] list in
+            guard let `self` = self else{return}
+            var newList : [FoodListModel] = []
+            list.forEach{data in
+                if (newList.count+1)%5 == 0{
+                    newList.append(.imageInsertion)
+                }
+                var model = data.toModel()
+                model.like = Int.random(in: 1000...9999).toFormat()
+                newList.append(.data(food: model))
             }
-        }
+            self.list = newList
+            self.outputs.didUpdateData?()
+        }, onError: {[weak self]error in
+            guard let `self` = self else{return}
+            self.outputs.didError?(error.localizedDescription)
+        }, onCompleted: nil, onDisposed: nil).disposed(by: disposeBag)
         
-        self.onFetchDataSuccess?()
+    
     }
 }

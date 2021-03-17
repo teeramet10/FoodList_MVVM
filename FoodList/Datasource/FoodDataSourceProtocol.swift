@@ -6,3 +6,7 @@
 //
 
 import Foundation
+import RxSwift
+protocol FoodDatasourceProtocol {
+    func getFood() -> Observable<[FoodEntity]>
+}

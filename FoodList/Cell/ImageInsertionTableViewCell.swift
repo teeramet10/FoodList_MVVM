@@ -9,15 +9,12 @@ import UIKit
 
 class ImageInsertionTableViewCell: UITableViewCell {
 
+    static let identifier = "ImageInsertionTableViewCell"
+    static let nib = UINib(nibName: ImageInsertionTableViewCell.identifier, bundle: nil)
+    
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
     }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
-    
 }

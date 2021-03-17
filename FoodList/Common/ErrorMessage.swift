@@ -6,3 +6,6 @@
 //
 
 import Foundation
+enum ErrorMessage: Error{
+    case error( errorMessage :String )
+}

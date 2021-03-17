@@ -6,9 +6,18 @@
 //
 
 import Foundation
-protocol FoodListViewModelProtocol  {
-    var onFetchDataSuccess : (()-> Void)? {get set}
-    
-    
+protocol FoodListViewModelInputProtocol  {
     func requestData()
+}
+
+protocol FoodListViewModelOutputProtocol :class{
+    var didError : ((String)->Void)? {get set}
+    var didUpdateData :(()->Void)? {get set}
+    var list : [FoodListModel] {get}
+}
+
+
+protocol FoodListViewModelType : FoodListViewModelInputProtocol ,FoodListViewModelOutputProtocol {
+    var inputs : FoodListViewModelInputProtocol {get}
+    var outputs : FoodListViewModelOutputProtocol{get}
 }

@@ -6,3 +6,9 @@
 //
 
 import Foundation
+struct  FoodModel : Decodable{
+    var name :String? = ""
+    var description : String? = ""
+    var like : String? = ""
+    var picture :String? = ""
+}

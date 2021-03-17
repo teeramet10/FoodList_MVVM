@@ -10,24 +10,42 @@ import XCTest
 
 class FoodListTests: XCTestCase {
 
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
+    
+    func testSuccessCase() throws {
+        let expectation = XCTestExpectation(description: "Fetch list food")
 
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-    }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
+        let repository = FoodRepository(dataSource: MockFoodDataSource(isSuccess: true))
+        let viewModel = FoodListViewModel(repository: repository)
+        viewModel.outputs.didUpdateData = {
+            XCTAssert(true)
+            expectation.fulfill()
         }
+        
+        viewModel.outputs.didError = { error in
+            XCTFail()
+            expectation.fulfill()
+        }
+        
+        viewModel.inputs.requestData()
+        wait(for: [expectation], timeout: 10.0)
     }
+    
+    func testFailedCase() throws {
+        let expectation = XCTestExpectation(description: "Fetch list food")
 
+        let repository = FoodRepository(dataSource: MockFoodDataSource(isSuccess: false))
+        let viewModel = FoodListViewModel(repository: repository)
+        viewModel.outputs.didUpdateData = {
+            XCTAssert(false)
+            expectation.fulfill()
+        }
+        
+        viewModel.outputs.didError = { error in
+            XCTAssert(true)
+            XCTAssert(error != "")
+            expectation.fulfill()
+        }
+        viewModel.inputs.requestData()
+        wait(for: [expectation], timeout: 10.0)
+    }
 }

@@ -8,10 +8,10 @@
 import Foundation
 extension Int{
     func toString() -> String{
-        return String(self) ?? "0"
+        return String(self)
     }
     
-    func toFormat(_ symbol :String = "฿")->String{
+    func toFormat()->String{
         let format = NumberFormatter()
         format.usesGroupingSeparator = true
         format.currencySymbol = ""
@@ -19,6 +19,6 @@ extension Int{
         format.locale = Locale.current
         format.maximumFractionDigits = 0
         let text =  format.string(from: NSNumber(value: self))
-        return "\((text ?? self.toString())) \(symbol)"
+        return text ?? ""
     }
 }
